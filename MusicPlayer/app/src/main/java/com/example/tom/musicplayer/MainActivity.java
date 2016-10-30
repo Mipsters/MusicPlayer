@@ -26,9 +26,15 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent activityIntent = new Intent(getApplicationContext(), MusicPlayer.class);
-                activityIntent.putExtra("location",position);
-                startActivity(activityIntent);
+                startActivity(new Intent(getApplicationContext(), MusicPlayer.class));
+
+                Intent serviceIntent = new Intent(getApplicationContext(), MusicService.class);
+                //if(getIntent().getData() == null)
+                serviceIntent.putExtra("location", position);
+                serviceIntent.setAction("com.example.tom.musicplayer.action.main");
+                startService(serviceIntent);
+                //else
+                //    serviceIntent.putExtra("songDirectory",getIntent().getData().getPath());
             }
         });
     }

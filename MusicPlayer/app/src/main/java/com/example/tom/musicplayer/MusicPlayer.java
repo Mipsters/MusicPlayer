@@ -15,18 +15,12 @@ public class MusicPlayer extends AppCompatActivity {
     private TextView title;
     private Intent previousIntent, playIntent, nextIntent;
 
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music);
-
-        Intent serviceIntent = new Intent(getApplicationContext(), MusicService.class);
-        //if(getIntent().getData() == null)
-        serviceIntent.putExtra("location", getIntent().getIntExtra("location", -1));
-        serviceIntent.setAction("com.example.tom.musicplayer.action.main");
-        startService(serviceIntent);
-        //else
-        //    serviceIntent.putExtra("songDirectory",getIntent().getData().getPath());
 
         Button prev = (Button)findViewById(R.id.prev);
         Button st_ps = (Button)findViewById(R.id.st_ps);
