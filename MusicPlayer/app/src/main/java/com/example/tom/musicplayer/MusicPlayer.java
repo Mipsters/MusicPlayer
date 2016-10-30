@@ -1,17 +1,8 @@
 package com.example.tom.musicplayer;
 
-import android.app.Notification;
-import android.app.PendingIntent;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.NotificationCompat;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -22,6 +13,7 @@ import android.widget.TextView;
 
 public class MusicPlayer extends AppCompatActivity {
     private TextView title;
+    private Intent previousIntent, playIntent, nextIntent;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,25 +33,34 @@ public class MusicPlayer extends AppCompatActivity {
         Button nxt = (Button)findViewById(R.id.nxt);
         title = (TextView)findViewById(R.id.textView);
 
+        previousIntent = new Intent(this, MusicService.class);
+        previousIntent.setAction("com.example.tom.musicplayer.action.prev");
+
+        playIntent = new Intent(this, MusicService.class);
+        playIntent.setAction("com.example.tom.musicplayer.action.play");
+
+        nextIntent = new Intent(this, MusicService.class);
+        nextIntent.setAction("com.example.tom.musicplayer.action.next");
+
 
         prev.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startService(previousIntent);
             }
         });
 
         st_ps.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startService(playIntent);
             }
         });
 
         nxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startService(nextIntent);
             }
         });
     }
