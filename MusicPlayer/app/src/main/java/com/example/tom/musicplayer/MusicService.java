@@ -76,6 +76,7 @@ public class MusicService extends Service {
                 replaceData();
                 break;
             case "com.example.tom.musicplayer.action.uri":
+                //TODO: When activity's screen rotates song restarts
                 Uri uri = intent.getParcelableExtra("uri");
 
                 if(mediaPlayer == null)
