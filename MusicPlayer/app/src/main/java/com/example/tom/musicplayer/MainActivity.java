@@ -29,12 +29,9 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), MusicPlayer.class));
 
                 Intent serviceIntent = new Intent(getApplicationContext(), MusicService.class);
-                //if(getIntent().getData() == null)
                 serviceIntent.putExtra("location", position);
                 serviceIntent.setAction("com.example.tom.musicplayer.action.main");
                 startService(serviceIntent);
-                //else
-                //    serviceIntent.putExtra("songDirectory",getIntent().getData().getPath());
             }
         });
     }
