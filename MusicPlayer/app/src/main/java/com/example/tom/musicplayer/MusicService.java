@@ -1,19 +1,24 @@
 package com.example.tom.musicplayer;
 
-import android.Manifest;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.IBinder;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.widget.RemoteViews;
 
 public class MusicService extends Service {
+    public static final String MAIN = "com.example.tom.musicplayer.action.main";
+    public static final String PREV = "com.example.tom.musicplayer.action.prev";
+    public static final String PLAY = "com.example.tom.musicplayer.action.play";
+    public static final String NEXT = "com.example.tom.musicplayer.action.next";
+    public static final String KILL = "com.example.tom.musicplayer.action.kill";
+    public static final String URI  = "com.example.tom.musicplayer.action.uri" ;
+    public static final String CALL_PLAY  = "com.example.tom.musicplayer.action.call.play";
+    public static final String CALL_STOP  = "com.example.tom.musicplayer.action.call.stop";
+
     private Integer location;
     private MediaPlayer mediaPlayer;
     private Notification notification;
@@ -26,7 +31,7 @@ public class MusicService extends Service {
         super.onCreate();
 
         Intent notificationIntent = new Intent(this, MainActivity.class);
-        notificationIntent.setAction("com.example.tom.musicplayer.action.main");
+        notificationIntent.setAction(MAIN);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                 | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
@@ -44,22 +49,22 @@ public class MusicService extends Service {
 
     private void generateIntents() {
         previousIntent = new Intent(this, MusicService.class);
-        previousIntent.setAction("com.example.tom.musicplayer.action.prev");
+        previousIntent.setAction(PREV);
 
         playIntent = new Intent(this, MusicService.class);
-        playIntent.setAction("com.example.tom.musicplayer.action.play");
+        playIntent.setAction(PLAY);
 
         nextIntent = new Intent(this, MusicService.class);
-        nextIntent.setAction("com.example.tom.musicplayer.action.next");
+        nextIntent.setAction(NEXT);
 
         killIntent = new Intent(this, MusicService.class);
-        killIntent.setAction("com.example.tom.musicplayer.action.kill");
+        killIntent.setAction(KILL);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         switch (intent.getAction()){
-            case "com.example.tom.musicplayer.action.main":
+            case MAIN:
                 if(location == null)
                     location = intent.getIntExtra("location", -1);
                 if(mediaPlayer == null)
@@ -75,7 +80,7 @@ public class MusicService extends Service {
                 title = getSongName();
                 replaceData();
                 break;
-            case "com.example.tom.musicplayer.action.uri":
+            case URI:
                 //TODO: When activity's screen rotates song restarts
                 Uri uri = intent.getParcelableExtra("uri");
 
@@ -92,28 +97,28 @@ public class MusicService extends Service {
                 title = uri.toString();
                 replaceData();
                 break;
-            case "com.example.tom.musicplayer.action.prev":
+            case PREV:
                 if(!isExStorage)
                     previousMusic();
                 break;
-            case "com.example.tom.musicplayer.action.play":
+            case PLAY:
                 startStopMusic();
                 break;
-            case "com.example.tom.musicplayer.action.next":
+            case NEXT:
                 if(!isExStorage)
                     nextMusic();
                 break;
-            case "com.example.tom.musicplayer.action.kill":
+            case KILL:
                 mediaPlayer.stop();
                 mediaPlayer.release();
                 stopForeground(true);
                 stopSelf();
                 break;
-            case "com.example.tom.musicplayer.action.call.play":
+            case CALL_PLAY:
                 if(mediaPlayer != null)
                     mediaPlayer.start();
                 break;
-            case "com.example.tom.musicplayer.action.call.stop":
+            case CALL_STOP:
                 if(mediaPlayer != null)
                     mediaPlayer.pause();
                 break;
