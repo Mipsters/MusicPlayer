@@ -84,12 +84,11 @@ public class MusicService extends Service {
                 replaceNotData();
                 break;
             case URI:
-                //TODO: When activity's screen rotates song restarts
                 Uri uri = intent.getParcelableExtra("uri");
 
                 if(mediaPlayer == null)
                     mediaPlayer = MediaPlayer.create(this, uri);
-                else {
+                else if(!title.equals(uri.toString())){
                     mediaPlayer.release();
                     mediaPlayer = MediaPlayer.create(this, uri);
                 }

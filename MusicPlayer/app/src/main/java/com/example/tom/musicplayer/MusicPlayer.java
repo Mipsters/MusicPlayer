@@ -18,7 +18,7 @@ import android.widget.Toast;
  */
 
 public class MusicPlayer extends AppCompatActivity {
-    private Intent previousIntent, playIntent, nextIntent, serviceIntent;
+    private Intent previousIntent, playIntent, nextIntent;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,8 +45,8 @@ public class MusicPlayer extends AppCompatActivity {
                     != android.content.pm.PackageManager.PERMISSION_GRANTED)
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-            else if(serviceIntent == null){
-                serviceIntent = new Intent(getApplicationContext(), MusicService.class);
+            else{
+                Intent serviceIntent = new Intent(getApplicationContext(), MusicService.class);
                 serviceIntent.putExtra("uri",getIntent().getData());
                 serviceIntent.setAction(MusicService.URI);
                 startService(serviceIntent);
