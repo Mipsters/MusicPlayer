@@ -18,11 +18,6 @@ import android.widget.Toast;
  */
 
 public class MusicPlayer extends AppCompatActivity {
-    public static final String PREV = "com.example.tom.musicplayer.action.prev";
-    public static final String PLAY = "com.example.tom.musicplayer.action.play";
-    public static final String NEXT = "com.example.tom.musicplayer.action.next";
-    public static final String URI  = "com.example.tom.musicplayer.action.uri" ;
-
     private Intent previousIntent, playIntent, nextIntent;
 
     @Override
@@ -39,10 +34,10 @@ public class MusicPlayer extends AppCompatActivity {
         previousIntent.setAction(MusicService.PREV);
 
         playIntent = new Intent(this, MusicService.class);
-        playIntent.setAction(PLAY);
+        playIntent.setAction(MusicService.PLAY);
 
         nextIntent = new Intent(this, MusicService.class);
-        nextIntent.setAction(NEXT);
+        nextIntent.setAction(MusicService.NEXT);
 
         if(getIntent().getData() != null) {
             if(ContextCompat.checkSelfPermission(this,
@@ -53,7 +48,7 @@ public class MusicPlayer extends AppCompatActivity {
             else{
                 Intent serviceIntent = new Intent(getApplicationContext(), MusicService.class);
                 serviceIntent.putExtra("uri",getIntent().getData());
-                serviceIntent.setAction(URI);
+                serviceIntent.setAction(MusicService.URI);
                 startService(serviceIntent);
             }
         }
@@ -90,7 +85,7 @@ public class MusicPlayer extends AppCompatActivity {
 
                     Intent serviceIntent = new Intent(getApplicationContext(), MusicService.class);
                     serviceIntent.putExtra("uri",getIntent().getData());
-                    serviceIntent.setAction(URI);
+                    serviceIntent.setAction(MusicService.URI);
                     startService(serviceIntent);
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
