@@ -25,6 +25,7 @@ public class MusicService extends Service {
     private Intent previousIntent, playIntent, nextIntent, killIntent;
     private boolean isExStorage;
     private String title;
+    private RemoteViews contentView, contentViewBig;
 
     @Override
     public void onCreate() {
@@ -45,6 +46,8 @@ public class MusicService extends Service {
                 .setWhen(System.currentTimeMillis())
                 .setContentIntent(pendingIntent)
                 .build();
+        
+        initNoteData();
     }
 
     private void generateIntents() {
@@ -78,7 +81,7 @@ public class MusicService extends Service {
                 isExStorage = false;
 
                 title = getSongName();
-                replaceData();
+                replaceNoteData();
                 break;
             case URI:
                 //TODO: When activity's screen rotates song restarts
@@ -95,7 +98,7 @@ public class MusicService extends Service {
                 isExStorage = true;
 
                 title = uri.toString();
-                replaceData();
+                replaceNoteData();
                 break;
             case PREV:
                 if(!isExStorage)
@@ -129,11 +132,11 @@ public class MusicService extends Service {
     public void startStopMusic(){
         if(mediaPlayer.isPlaying()) {
             mediaPlayer.pause();
-            replaceData();
+            replaceNoteData();
         }
         else {
             mediaPlayer.start();
-            replaceData();
+            replaceNoteData();
         }
     }
 
@@ -149,7 +152,7 @@ public class MusicService extends Service {
         if(isPlaying)
             mediaPlayer.start();
 
-        replaceData();
+        replaceNoteData();
     }
 
     public void previousMusic(){
@@ -164,7 +167,7 @@ public class MusicService extends Service {
         if(isPlaying)
             mediaPlayer.start();
 
-        replaceData();
+        replaceNoteData();
     }
 
     private int getSong(){
@@ -196,18 +199,12 @@ public class MusicService extends Service {
         return null;
     }
 
-    private void replaceData(){
-        boolean isPlaying = mediaPlayer != null && !mediaPlayer.isPlaying();
-        String album = "album";
+    private  void initNoteData(){
+        contentView = new RemoteViews(getPackageName(), R.layout.custom_notification);
 
-        RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.custom_notification);
-        contentView.setImageViewResource(R.id.image, R.mipmap.ic_launcher);
-        contentView.setTextViewText(R.id.title, title);
-        contentView.setTextViewText(R.id.text, album);
-        contentView.setImageViewResource(R.id.imageButtonPrev, R.drawable.ic_skip_previous_black_36dp);
+        contentView.setImageViewResource(R.id.imageButtonPrev,R.drawable.ic_skip_previous_black_36dp);
         contentView.setOnClickPendingIntent(R.id.imageButtonPrev,
                 PendingIntent.getService(this, 0, previousIntent, 0));
-        contentView.setImageViewResource(R.id.imageButtonStop, isPlaying ? R.drawable.ic_play_arrow_black_36dp : R.drawable.ic_pause_black_36dp);
         contentView.setOnClickPendingIntent(R.id.imageButtonStop,
                 PendingIntent.getService(this, 0, playIntent, 0));
         contentView.setImageViewResource(R.id.imageButtonNext, R.drawable.ic_skip_next_black_36dp);
@@ -217,16 +214,12 @@ public class MusicService extends Service {
         contentView.setOnClickPendingIntent(R.id.imageButtonExit,
                 PendingIntent.getService(this, 0, killIntent, 0));
 
-        notification.contentView = contentView;
 
-        RemoteViews contentViewBig = new RemoteViews(getPackageName(), R.layout.custom_notification_big);
-        contentViewBig.setImageViewResource(R.id.image, R.mipmap.ic_launcher);
-        contentViewBig.setTextViewText(R.id.title, title);
-        contentViewBig.setTextViewText(R.id.text, album);
+        contentViewBig = new RemoteViews(getPackageName(), R.layout.custom_notification_big);
+
         contentViewBig.setImageViewResource(R.id.imageButtonPrev, R.drawable.ic_skip_previous_black_36dp);
         contentViewBig.setOnClickPendingIntent(R.id.imageButtonPrev,
                 PendingIntent.getService(this, 0, previousIntent, 0));
-        contentViewBig.setImageViewResource(R.id.imageButtonStop, isPlaying ? R.drawable.ic_play_arrow_black_36dp : R.drawable.ic_pause_black_36dp);
         contentViewBig.setOnClickPendingIntent(R.id.imageButtonStop,
                 PendingIntent.getService(this, 0, playIntent, 0));
         contentViewBig.setImageViewResource(R.id.imageButtonNext, R.drawable.ic_skip_next_black_36dp);
@@ -235,6 +228,27 @@ public class MusicService extends Service {
         contentViewBig.setImageViewResource(R.id.imageButtonExit, R.drawable.ic_close_black_36dp);
         contentViewBig.setOnClickPendingIntent(R.id.imageButtonExit,
                 PendingIntent.getService(this, 0, killIntent, 0));
+    }
+
+
+    private void replaceNoteData(){
+        boolean isPlaying = mediaPlayer != null && !mediaPlayer.isPlaying();
+        String album = "album";
+
+        contentView.setImageViewResource(R.id.image, R.mipmap.ic_launcher);
+        contentView.setTextViewText(R.id.title, title);
+        contentView.setTextViewText(R.id.text, album);
+        contentView.setImageViewResource(R.id.imageButtonStop,
+                isPlaying ? R.drawable.ic_play_arrow_black_36dp : R.drawable.ic_pause_black_36dp);
+
+        notification.contentView = contentView;
+
+
+        contentViewBig.setImageViewResource(R.id.image, R.mipmap.ic_launcher);
+        contentViewBig.setTextViewText(R.id.title, title);
+        contentViewBig.setTextViewText(R.id.text, album);
+        contentViewBig.setImageViewResource(R.id.imageButtonStop,
+                isPlaying ? R.drawable.ic_play_arrow_black_36dp : R.drawable.ic_pause_black_36dp);
 
         notification.bigContentView = contentViewBig;
 
