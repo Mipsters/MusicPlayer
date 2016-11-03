@@ -18,7 +18,7 @@ import android.widget.Toast;
  */
 
 public class MusicPlayer extends AppCompatActivity {
-    private Intent previousIntent, playIntent, nextIntent;
+    private Intent previousIntent, playIntent, nextIntent, serviceIntent;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,8 +45,8 @@ public class MusicPlayer extends AppCompatActivity {
                     != android.content.pm.PackageManager.PERMISSION_GRANTED)
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-            else{
-                Intent serviceIntent = new Intent(getApplicationContext(), MusicService.class);
+            else if(serviceIntent == null){
+                serviceIntent = new Intent(getApplicationContext(), MusicService.class);
                 serviceIntent.putExtra("uri",getIntent().getData());
                 serviceIntent.setAction(MusicService.URI);
                 startService(serviceIntent);
@@ -91,7 +91,7 @@ public class MusicPlayer extends AppCompatActivity {
                     // contacts-related task you need to do.
 
                 } else {
-                    Toast.makeText(this,"I need this premmision to play songs from your file explorer",Toast.LENGTH_LONG).show();
+                    Toast.makeText(this,"I need this permission to play songs from your file explorer",Toast.LENGTH_LONG).show();
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
                 }

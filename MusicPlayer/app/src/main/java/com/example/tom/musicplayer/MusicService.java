@@ -47,7 +47,7 @@ public class MusicService extends Service {
                 .setContentIntent(pendingIntent)
                 .build();
         
-        initNoteData();
+        initNotData();
     }
 
     private void generateIntents() {
@@ -81,7 +81,7 @@ public class MusicService extends Service {
                 isExStorage = false;
 
                 title = getSongName();
-                replaceNoteData();
+                replaceNotData();
                 break;
             case URI:
                 //TODO: When activity's screen rotates song restarts
@@ -98,7 +98,7 @@ public class MusicService extends Service {
                 isExStorage = true;
 
                 title = uri.toString();
-                replaceNoteData();
+                replaceNotData();
                 break;
             case PREV:
                 if(!isExStorage)
@@ -132,11 +132,11 @@ public class MusicService extends Service {
     public void startStopMusic(){
         if(mediaPlayer.isPlaying()) {
             mediaPlayer.pause();
-            replaceNoteData();
+            replaceNotData();
         }
         else {
             mediaPlayer.start();
-            replaceNoteData();
+            replaceNotData();
         }
     }
 
@@ -152,7 +152,7 @@ public class MusicService extends Service {
         if(isPlaying)
             mediaPlayer.start();
 
-        replaceNoteData();
+        replaceNotData();
     }
 
     public void previousMusic(){
@@ -167,7 +167,7 @@ public class MusicService extends Service {
         if(isPlaying)
             mediaPlayer.start();
 
-        replaceNoteData();
+        replaceNotData();
     }
 
     private int getSong(){
@@ -199,7 +199,7 @@ public class MusicService extends Service {
         return null;
     }
 
-    private  void initNoteData(){
+    private  void initNotData(){
         contentView = new RemoteViews(getPackageName(), R.layout.custom_notification);
 
         contentView.setImageViewResource(R.id.imageButtonPrev,R.drawable.ic_skip_previous_black_36dp);
@@ -230,8 +230,7 @@ public class MusicService extends Service {
                 PendingIntent.getService(this, 0, killIntent, 0));
     }
 
-
-    private void replaceNoteData(){
+    private void replaceNotData(){
         boolean isPlaying = mediaPlayer != null && !mediaPlayer.isPlaying();
         String album = "album";
 
