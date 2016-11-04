@@ -12,13 +12,15 @@ public class PhoneCallReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        Toast.makeText(context,"hey 1",Toast.LENGTH_LONG).show();
+
         String state = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
 
         Intent playIntent = new Intent(context, MusicService.class);
-        playIntent.setAction("com.example.tom.musicplayer.action.call.play");
+        playIntent.setAction(MusicService.CALL_PLAY);
 
         Intent stopIntent = new Intent(context, MusicService.class);
-        playIntent.setAction("com.example.tom.musicplayer.action.call.stop");
+        playIntent.setAction(MusicService.CALL_STOP);
 
         if(state.equals(TelephonyManager.EXTRA_STATE_RINGING) ||
            state.equals(TelephonyManager.EXTRA_STATE_OFFHOOK)) {

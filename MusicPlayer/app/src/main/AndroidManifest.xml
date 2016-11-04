@@ -37,9 +37,8 @@
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.PHONE_STATE">
-                </action>
+                <action android:name="android.intent.action.PHONE_STATE"/>
+                <!--action android:name="com.example.tom.musicplayer.action.BRODCAST"/-->
         </intent-filter></receiver>
     </application>
-
 </manifest>
