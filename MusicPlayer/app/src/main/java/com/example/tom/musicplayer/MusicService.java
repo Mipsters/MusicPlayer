@@ -3,11 +3,15 @@ package com.example.tom.musicplayer;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.IBinder;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 public class MusicService extends Service {
     public static final String MAIN = "com.example.tom.musicplayer.action.main";
@@ -22,7 +26,7 @@ public class MusicService extends Service {
     private Integer location;
     private MediaPlayer mediaPlayer;
     private Notification notification;
-    private Intent previousIntent, playIntent, nextIntent, killIntent;
+    private Intent previousIntent, playIntent, nextIntent, killIntent, phonePlayIntent,stopIntent;
     private boolean isExStorage;
     private String title;
     private RemoteViews contentView, contentViewBig;
@@ -48,6 +52,27 @@ public class MusicService extends Service {
                 .build();
         
         initNotData();
+
+        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        PhoneStateListener callStateListener = new PhoneStateListener() {
+            @Override
+            public void onCallStateChanged(int state, String incomingNumber) {
+                switch (state){
+                    case TelephonyManager.CALL_STATE_RINGING:
+                        stopIntent = new Intent(getApplicationContext(), MusicService.class);
+                        stopIntent.setAction(MusicService.CALL_STOP);
+                        getApplicationContext().startService(stopIntent);
+                        break;
+                    case TelephonyManager.CALL_STATE_IDLE:
+                        phonePlayIntent = new Intent(getApplicationContext(), MusicService.class);
+                        phonePlayIntent.setAction(MusicService.CALL_PLAY);
+                        getApplicationContext().startService(phonePlayIntent);
+                        break;
+                }
+            }
+        };
+
+        telephonyManager.listen(callStateListener, PhoneStateListener.LISTEN_CALL_STATE);
     }
 
     private void generateIntents() {
@@ -129,14 +154,15 @@ public class MusicService extends Service {
     }
 
     public void startStopMusic(){
-        if(mediaPlayer.isPlaying()) {
-            mediaPlayer.pause();
-            replaceNotData();
-        }
-        else {
-            mediaPlayer.start();
-            replaceNotData();
-        }
+        if(mediaPlayer != null)
+            if(mediaPlayer.isPlaying()) {
+                mediaPlayer.pause();
+                replaceNotData();
+            }
+            else {
+                mediaPlayer.start();
+                replaceNotData();
+            }
     }
 
     public void nextMusic(){

@@ -3,6 +3,9 @@
     package="com.example.tom.musicplayer">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-feature android:name="android.hardware.telephony" android:required="true" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <application
         android:allowBackup="true"
@@ -32,13 +35,5 @@
             android:enabled="true"
             android:exported="true" />
 
-        <receiver
-            android:name=".PhoneCallReceiver"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.PHONE_STATE"/>
-                <!--action android:name="com.example.tom.musicplayer.action.BRODCAST"/-->
-        </intent-filter></receiver>
     </application>
 </manifest>
