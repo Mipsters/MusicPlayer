@@ -39,15 +39,15 @@ public class MusicPlayer extends AppCompatActivity {
         nextIntent = new Intent(this, MusicService.class);
         nextIntent.setAction(MusicService.NEXT);
 
+        // checks if the app was opened from explorer
         if(getIntent().getData() != null) {
-            if(ContextCompat.checkSelfPermission(this,
-                    Manifest.permission.READ_EXTERNAL_STORAGE)
+            // the app was open from explorer, to access it permission is needed
+            if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
                     != android.content.pm.PackageManager.PERMISSION_GRANTED)
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-            else{
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+            else {
                 Intent serviceIntent = new Intent(getApplicationContext(), MusicService.class);
-                serviceIntent.putExtra("uri",getIntent().getData());
+                serviceIntent.putExtra(MusicService.URI_DATA,getIntent().getData());
                 serviceIntent.setAction(MusicService.URI);
                 startService(serviceIntent);
             }
@@ -84,7 +84,7 @@ public class MusicPlayer extends AppCompatActivity {
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                     Intent serviceIntent = new Intent(getApplicationContext(), MusicService.class);
-                    serviceIntent.putExtra("uri",getIntent().getData());
+                    serviceIntent.putExtra(MusicService.URI_DATA, getIntent().getData());
                     serviceIntent.setAction(MusicService.URI);
                     startService(serviceIntent);
                     // permission was granted, yay! Do the

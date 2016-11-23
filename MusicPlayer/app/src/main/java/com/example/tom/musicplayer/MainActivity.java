@@ -42,8 +42,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), MusicPlayer.class));
 
                 Intent serviceIntent = new Intent(getApplicationContext(), MusicService.class);
-                serviceIntent.putExtra("location", position);
-                serviceIntent.setAction("com.example.tom.musicplayer.action.main");
+                serviceIntent.putExtra(MusicService.LOC, position);
+                serviceIntent.setAction(MusicService.MAIN);
                 startService(serviceIntent);
             }
         });

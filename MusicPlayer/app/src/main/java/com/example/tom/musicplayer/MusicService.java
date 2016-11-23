@@ -23,6 +23,11 @@ public class MusicService extends Service {
     public static final String CALL_PLAY  = "com.example.tom.musicplayer.action.call.play";
     public static final String CALL_STOP  = "com.example.tom.musicplayer.action.call.stop";
 
+    public static final String LOC  = "com.example.tom.musicplayer.data.location";
+    public static final String URI_DATA  = "com.example.tom.musicplayer.data.uri";
+
+    private static final int NOTIFICATION_ID = 101;
+
     private Integer location;
     private MediaPlayer mediaPlayer;
     private Notification notification;
@@ -30,6 +35,11 @@ public class MusicService extends Service {
     private boolean isExStorage;
     private String title;
     private RemoteViews contentView, contentViewBig;
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
 
     @Override
     public void onCreate() {
@@ -75,26 +85,12 @@ public class MusicService extends Service {
         telephonyManager.listen(callStateListener, PhoneStateListener.LISTEN_CALL_STATE);
     }
 
-    private void generateIntents() {
-        previousIntent = new Intent(this, MusicService.class);
-        previousIntent.setAction(PREV);
-
-        playIntent = new Intent(this, MusicService.class);
-        playIntent.setAction(PLAY);
-
-        nextIntent = new Intent(this, MusicService.class);
-        nextIntent.setAction(NEXT);
-
-        killIntent = new Intent(this, MusicService.class);
-        killIntent.setAction(KILL);
-    }
-
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         switch (intent.getAction()){
             case MAIN:
                 if(location == null)
-                    location = intent.getIntExtra("location", -1);
+                    location = intent.getIntExtra(LOC, -1);
                 if(mediaPlayer == null)
                     mediaPlayer = MediaPlayer.create(this, getSong());
                 else if(isExStorage){
@@ -109,7 +105,7 @@ public class MusicService extends Service {
                 replaceNotData();
                 break;
             case URI:
-                Uri uri = intent.getParcelableExtra("uri");
+                Uri uri = intent.getParcelableExtra(URI_DATA);
 
                 if(mediaPlayer == null)
                     mediaPlayer = MediaPlayer.create(this, uri);
@@ -219,9 +215,18 @@ public class MusicService extends Service {
         return "Song Name";
     }
 
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
+    private void generateIntents() {
+        previousIntent = new Intent(this, MusicService.class);
+        previousIntent.setAction(PREV);
+
+        playIntent = new Intent(this, MusicService.class);
+        playIntent.setAction(PLAY);
+
+        nextIntent = new Intent(this, MusicService.class);
+        nextIntent.setAction(NEXT);
+
+        killIntent = new Intent(this, MusicService.class);
+        killIntent.setAction(KILL);
     }
 
     private  void initNotData(){
@@ -276,6 +281,6 @@ public class MusicService extends Service {
 
         notification.bigContentView = contentViewBig;
 
-        startForeground(101, notification);
+        startForeground(NOTIFICATION_ID, notification);
     }
 }
