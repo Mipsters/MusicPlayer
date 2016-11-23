@@ -64,7 +64,8 @@ public class MusicService extends Service {
         initNotData();
 
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        PhoneStateListener callStateListener = new PhoneStateListener() {
+
+        telephonyManager.listen(new PhoneStateListener() {
             @Override
             public void onCallStateChanged(int state, String incomingNumber) {
                 switch (state){
@@ -80,9 +81,7 @@ public class MusicService extends Service {
                         break;
                 }
             }
-        };
-
-        telephonyManager.listen(callStateListener, PhoneStateListener.LISTEN_CALL_STATE);
+        }, PhoneStateListener.LISTEN_CALL_STATE);
     }
 
     @Override
