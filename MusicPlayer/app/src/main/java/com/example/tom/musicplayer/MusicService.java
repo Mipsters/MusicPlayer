@@ -31,7 +31,7 @@ public class MusicService extends Service {
     private Integer location;
     private MediaPlayer mediaPlayer;
     private Notification notification;
-    private Intent previousIntent, playIntent, nextIntent, killIntent, phonePlayIntent,stopIntent;
+    private Intent previousIntent, playIntent, nextIntent, killIntent, phonePlayIntent, stopIntent;
     private boolean isExStorage;
     private String title;
     private RemoteViews contentView, contentViewBig;
@@ -39,6 +39,12 @@ public class MusicService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        mainSwitch(intent);
+        return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
@@ -84,8 +90,7 @@ public class MusicService extends Service {
         }, PhoneStateListener.LISTEN_CALL_STATE);
     }
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    private void mainSwitch(Intent intent) {
         switch (intent.getAction()){
             case MAIN:
                 if(location == null)
@@ -145,7 +150,6 @@ public class MusicService extends Service {
                     mediaPlayer.pause();
                 break;
         }
-        return super.onStartCommand(intent, flags, startId);
     }
 
     public void startStopMusic(){
